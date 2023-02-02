@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context="com.funsol.funmob_sdk.ui.InterstitialActivity">
+
+    <FrameLayout
+        android:id="@+id/app_icon_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/interstitial_app_icon_bg"
+        android:elevation="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintWidth_percent="0.6">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_marginBottom="@dimen/_16sdp"
+        android:gravity="center"
+        android:maxLines="2"
+        android:text="App Name\nLine 2"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_18sdp"
+        app:layout_constraintBottom_toTopOf="@id/layout_app_info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_icon_card"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_app_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/btn_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_name">
+
+        <TextView
+            android:id="@+id/total_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_star"
+            android:drawableRight="@drawable/ic_star"
+            android:gravity="center_horizontal|bottom"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="4.3 "
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            app:drawableRightCompat="@drawable/ic_star"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/total_downloads"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/rating_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/_6sdp"
+            android:gravity="center_horizontal|bottom"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="Ratings"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/_11sdp"
+            app:layout_constraintEnd_toEndOf="@id/total_rating"
+            app:layout_constraintStart_toStartOf="@id/total_rating"
+            app:layout_constraintTop_toBottomOf="@id/total_rating" />
+
+        <View
+            android:id="@+id/rating_view"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/total_downloads"
+            app:layout_constraintStart_toEndOf="@id/total_rating"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/total_downloads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|bottom"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="600 k"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            app:drawableRightCompat="@drawable/ic_baseline_android_24"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/app_price"
+            app:layout_constraintStart_toEndOf="@id/total_rating"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/downloads_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/_6sdp"
+            android:gravity="center_horizontal|bottom"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="Downloads"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/_11sdp"
+            app:layout_constraintEnd_toEndOf="@id/total_downloads"
+            app:layout_constraintStart_toStartOf="@id/total_downloads"
+            app:layout_constraintTop_toBottomOf="@id/total_downloads" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/app_price"
+            app:layout_constraintStart_toEndOf="@id/total_downloads"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/app_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/_6sdp"
+            android:gravity="center_horizontal|bottom"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="FREE"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/total_downloads"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/price_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/_6sdp"
+            android:gravity="center_horizontal|bottom"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="Install"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/_11sdp"
+            app:layout_constraintEnd_toEndOf="@id/app_price"
+            app:layout_constraintStart_toStartOf="@id/app_price"
+            app:layout_constraintTop_toBottomOf="@id/app_price" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_rating"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:constraint_referenced_ids="rating_heading, total_rating, rating_view" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:backgroundTint="#ffffff"
+        android:text="@string/close"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13sdp"
+        app:cornerRadius="@dimen/_5sdp"
+        app:layout_constraintBottom_toTopOf="@id/text_play_store"
+        app:layout_constraintEnd_toStartOf="@id/btn_install"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_app_info"
+        app:layout_constraintWidth_percent="0.35"
+        app:strokeColor="@color/grey" />
+
+    <Button
+        android:id="@+id/btn_install"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/install"
+        android:textAllCaps="false"
+        android:textSize="@dimen/_13sdp"
+        app:backgroundTint="@color/green"
+        app:cornerRadius="@dimen/_5sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_close"
+        app:layout_constraintTop_toTopOf="@id/btn_close"
+        app:layout_constraintWidth_percent="0.35" />
+
+    <ImageView
+        android:id="@+id/play_icon"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginRight="@dimen/_4sdp"
+        android:contentDescription="@string/google_play"
+        android:src="@drawable/ic_google_play_store"
+        app:layout_constraintBottom_toBottomOf="@id/text_play_store"
+        app:layout_constraintEnd_toStartOf="@id/text_play_store"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/text_play_store" />
+
+    <TextView
+        android:id="@+id/text_play_store"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:text="@string/google_play"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/_13sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/play_icon"
+        app:layout_constraintTop_toBottomOf="@id/btn_close" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

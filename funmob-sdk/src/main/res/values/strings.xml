@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">funmob-sdk</string>
+    <string name="close">Close</string>
+    <string name="install">Install</string>
+    <string name="google_play">Google Play</string>
+    <string name="image_here">Image Here</string>
+    <string name="title_activity_interstitial">Interstitial Activity</string>
+</resources>

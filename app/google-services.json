@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "193933350775",
+    "project_id": "funmob-sdk",
+    "storage_bucket": "funmob-sdk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193933350775:android:5ae2f9b362848ec1947372",
+        "android_client_info": {
+          "package_name": "com.scorpio.funmob_sdk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193933350775-ke3uqm1g09qbmppm6mah94u1ab1jc7fg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVnMEIrXtu-aeHfE7oG1j-VTLYfQxQ_F4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193933350775-ke3uqm1g09qbmppm6mah94u1ab1jc7fg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

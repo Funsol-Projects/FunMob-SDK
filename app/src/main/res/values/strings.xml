@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">FunMob-SDK</string>
+    <string name="image_here">Image Here</string>
+    <string name="title_activity_interstitial">InterstitialActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="google_play">Google Play</string>
+    <string name="app_icon">App Icon</string>
+    <string name="close">Close</string>
+    <string name="install">Install</string>
+</resources>
