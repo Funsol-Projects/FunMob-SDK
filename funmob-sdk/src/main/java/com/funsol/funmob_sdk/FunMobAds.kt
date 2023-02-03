@@ -30,7 +30,6 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.initialize
 import com.tencent.mmkv.MMKV
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.coroutines.CoroutineScope
@@ -407,12 +406,15 @@ class FunMobAds {
     private fun goToPlayStore(activity: Activity, campaignResponse: CampaignResponse) {
         CoroutineScope(IO).launch { validateClick(authorization, campaignResponse.ad_unit_id, campaignResponse.combination_id) }
 
-//        val link = "${campaignResponse.deeplink}newshare?ad_unit_id=${campaignResponse.ad_unit_id}&combination_id=${campaignResponse.combination_id}"
+        var domain = campaignResponse.domain
+        if (!domain.endsWith("/"))
+            domain += "/"
+
         val link = "${campaignResponse.deeplink}?ad_unit_id=${campaignResponse.ad_unit_id}&combination_id=${campaignResponse.combination_id}"
 
         val encodedUrl = URLEncoder.encode(link, "UTF-8")
 
-        val finalLink = "${campaignResponse.domain}?link=$encodedUrl&apn=${campaignResponse.package_name}"
+        val finalLink = "${campaignResponse.domain}?link=$encodedUrl&apn=${campaignResponse.package_name}".replace("?link=+", "?link=")
 
         sendLog("goToPlayStore: a$finalLink")
         openFinalLink(activity, finalLink)

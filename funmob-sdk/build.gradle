@@ -65,13 +65,13 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.Funsol-Projects'
                 artifactId = 'FunMob-SDK'
-                version = '0.1-Beta'
+                version = '0.1.1-Beta'
             }
             debug(MavenPublication) {
                 from components.debug
                 groupId = 'com.github.Funsol-Projects'
                 artifactId = 'FunMob-SDK'
-                version = '0.1-Beta'
+                version = '0.1.1-Beta'
             }
         }
     }
