@@ -1,6 +1,9 @@
 package com.funsol.funmob_sdk.model
 
 data class UserDeviceInfo(
+    var time: String = "",
+    var uuid: String = "",
+    var camp_uuid: String = "",
     val Board: String,
     val BootLoader: String,
     val Brand: String,

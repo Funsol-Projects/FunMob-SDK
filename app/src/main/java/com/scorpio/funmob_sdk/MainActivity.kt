@@ -10,7 +10,7 @@ import com.funsol.funmob_sdk.interfaces.FunInterstitialCallback
 import com.funsol.funmob_sdk.interfaces.FunNativeCallback
 import com.funsol.funmob_sdk.model.CampaignResponse
 import com.google.firebase.FirebaseApp
-import com.scorpio.funmob_sdk.Constants.bannerAdId
+import com.scorpio.funmob_sdk.Constants.bannerAdId2
 import com.scorpio.funmob_sdk.Constants.interstitialAdId
 import com.scorpio.funmob_sdk.Constants.nativeAdId
 import com.scorpio.funmob_sdk.databinding.ActivityMainBinding
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             funMobAds.loadFunNativeAd(Constants.authorization, nativeAdId)
         }
 
-        funMobAds.loadFunBannerAd(Constants.authorization, bannerAdId, this, binding.placeholderBanner, object : FunBannerCallback {
+        funMobAds.loadFunBannerAd(Constants.authorization, bannerAdId2, this, binding.placeholderBanner, object : FunBannerCallback {
             override fun onAdLoaded() {
                 Log.i(TAG, "MyBannerTag -> onAdLoaded: ")
             }
@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
             override fun onAdClicked() {
                 Log.i(TAG, "MyBannerTag -> onAdClicked: ")
             }
-
         })
     }
 
@@ -73,18 +72,22 @@ class MainActivity : AppCompatActivity() {
                     binding.btnLoadNative1.text = "Load Native 1b"
                     "1b"
                 }
+
                 "1b" -> {
                     binding.btnLoadNative1.text = "Load Native 7a"
                     "7a"
                 }
+
                 "7a" -> {
                     binding.btnLoadNative1.text = "Load Native 7b"
                     "7b"
                 }
+
                 "7b" -> {
                     binding.btnLoadNative1.text = "Load Native 1a"
                     "1a"
                 }
+
                 else -> {
                     binding.btnLoadNative1.text = "Load Native 1a"
                     "1a"
@@ -107,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
     private val funInterstitialCallback: FunInterstitialCallback = object : FunInterstitialCallback {
         override fun onAdLoaded(campaignResponse: CampaignResponse) {
-            Log.i(TAG, "InterstitialCallback -> onAdLoaded: $campaignResponse")
+            Log.i(TAG, "InterstitialCallback -> onAdLoaded:")
             Toast.makeText(this@MainActivity, "Interstital Ad Loaded", Toast.LENGTH_SHORT).show()
             binding.btnShowInterstitial.setOnClickListener { _ ->
                 funMobAds.showInterstitialAd(this@MainActivity, campaignResponse)
@@ -132,6 +135,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val TAG = "MyFunMobTag"
+        const val TAG = "FunMobTags"
     }
 }

@@ -2,50 +2,42 @@ package com.funsol.funmob_sdk.api
 
 import com.funsol.funmob_sdk.model.CampaignResponse
 import com.funsol.funmob_sdk.model.UserDeviceInfo
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface FunMobApi {
-    //    @GET("api/campaign/?time=Asia%2FKabul&{uuid}")
-//    @GET("api/campaign/?time=Asia%2FKabul&uuid=fun-mob-ad-unit-d89be49f-6a34-43ea-877b-007649f1f434")
-    @GET("api/campaign/")
-    suspend fun loadFunAd(
-        @Header("Authorization") authorization: String,
-//        @Body userDeviceInfo: UserDeviceInfo,
-        @Query(value = "time", encoded = true) time: String,
-        @Query(value = "uuid", encoded = true) uuid: String
-    ): Response<CampaignResponse>
 
-    @GET("api/clicks/{time}&{uuid}&{camp_uuid}")
+    @POST("api/campaign/")
+    fun loadFunAd(
+        @Header("Authorization") authorization: String,
+        @Body body: RequestBody,
+        @Header("Content-Type") contentType: String = "application/json"
+    ): Call<CampaignResponse>
+
+    @POST("api/clicks/")
     suspend fun validateClick(
         @Header("Authorization") authorization: String,
-        @Body userDeviceInfo: UserDeviceInfo,
-        @Path(value = "time", encoded = true) time: String,
-        @Path(value = "uuid", encoded = true) uuid: String,
-        @Path(value = "camp_uuid", encoded = true) camp_uuid: String
+        @Body body: RequestBody,
+        @Header("Content-Type") contentType: String = "application/json"
     )
 
-    @GET("api/impressions/{time}&{uuid}&{camp_uuid}")
+    @POST("api/impressions/")
     suspend fun validateImpression(
         @Header("Authorization") authorization: String,
-        @Body userDeviceInfo: UserDeviceInfo,
-        @Path(value = "time", encoded = true) time: String,
-        @Path(value = "uuid", encoded = true) uuid: String,
-        @Path(value = "camp_uuid", encoded = true) camp_uuid: String
-    )
+        @Body body: RequestBody,
+        @Header("Content-Type") contentType: String = "application/json"
+    ): Response<String>
 
-    @GET("api/installs/{time}&{uuid}&{camp_uuid}")
+
+    @POST("api/installs/")
     suspend fun validateInstall(
         @Header("Authorization") authorization: String,
-        @Body userDeviceInfo: UserDeviceInfo,
-        @Path(value = "time", encoded = true) time: String,
-        @Path(value = "uuid", encoded = true) uuid: String,
-        @Path(value = "camp_uuid", encoded = true) camp_uuid: String
+        @Body body: RequestBody,
+        @Header("Content-Type") contentType: String = "application/json"
     )
 
     @GET("api/register/{uuid}")

@@ -3,7 +3,6 @@ package com.funsol.funmob_sdk
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -15,6 +14,8 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.android.installreferrer.api.InstallReferrerClient
+import com.android.installreferrer.api.InstallReferrerStateListener
 import com.bumptech.glide.Glide
 import com.funsol.funmob_sdk.databinding.ActivityInterstitialBinding
 import com.funsol.funmob_sdk.interfaces.FunBannerCallback
@@ -22,14 +23,9 @@ import com.funsol.funmob_sdk.interfaces.FunInterstitialCallback
 import com.funsol.funmob_sdk.interfaces.FunNativeCallback
 import com.funsol.funmob_sdk.model.CampaignResponse
 import com.funsol.funmob_sdk.retrofit.DefaultFunMobRepository
-import com.funsol.funmob_sdk.utils.Constants
 import com.funsol.funmob_sdk.utils.NativeAdDesignUtils
 import com.funsol.funmob_sdk.utils.NumberConverter
 import com.funsol.funmob_sdk.utils.Resource
-import com.google.firebase.FirebaseApp
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData
-import com.google.firebase.dynamiclinks.ktx.dynamicLinks
-import com.google.firebase.ktx.Firebase
 import com.tencent.mmkv.MMKV
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +33,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.URLEncoder
 
 
 class FunMobAds {
@@ -55,20 +50,23 @@ class FunMobAds {
         CoroutineScope(IO).launch {
             this@FunMobAds.authorization = authorization
             if (native_ad_id.contains("native")) {
-                when (val campaignResponse = repository.loadFunAd(authorization, native_ad_id)) {
-                    is Resource.Error -> {
-                        Log.i(TAG, "loadFunNativeAd error->->->->: ${campaignResponse.data}\n ${campaignResponse.message}")
-                        funNativeCallback?.onAdFailed(campaignResponse.message.toString())
-                    }
-                    is Resource.Success -> {
-                        Log.i(TAG, "loadFunNativeAd success->->->->: ${campaignResponse.data}\n ${campaignResponse.message}")
-                        val campaign = campaignResponse.data
+                repository.loadFunAd(authorization, native_ad_id) { campaignResponse ->
+                    when (campaignResponse) {
+                        is Resource.Error -> {
+                            Log.i(TAG, "loadFunNativeAd error->->->->: ${campaignResponse.message}")
+                            funNativeCallback?.onAdFailed(campaignResponse.message.toString())
+                        }
 
-                        withContext(Dispatchers.Main) {
-                            if (campaign != null) {
-                                funNativeCallback?.onAdLoaded(campaign)
-                            } else {
-                                funNativeCallback?.onAdFailed("Unexpected Error")
+                        is Resource.Success -> {
+                            Log.i(TAG, "loadFunNativeAd success->->->->: ${campaignResponse.message}")
+                            val campaign = campaignResponse.data
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                if (campaign != null) {
+                                    funNativeCallback?.onAdLoaded(campaign)
+                                } else {
+                                    funNativeCallback?.onAdFailed("Unexpected Error")
+                                }
                             }
                         }
                     }
@@ -87,15 +85,19 @@ class FunMobAds {
             "1a" -> {
                 inflater.inflate(R.layout.funmob_native_1a, parentView, false)
             }
+
             "1b" -> {
                 inflater.inflate(R.layout.funmob_native_1b, parentView, false)
             }
+
             "7a" -> {
                 inflater.inflate(R.layout.funmob_native_7a, parentView, false)
             }
+
             "7b" -> {
                 inflater.inflate(R.layout.funmob_native_7b, parentView, false)
             }
+
             else -> {
                 inflater.inflate(R.layout.funmob_native_1a, parentView, false)
             }
@@ -188,16 +190,23 @@ class FunMobAds {
         CoroutineScope(IO).launch {
             this@FunMobAds.authorization = authorization
             if (interstitial_ad_id.contains("interstitial")) {
-                when (val campaignResponse = repository.loadFunAd(authorization, interstitial_ad_id)) {
-                    is Resource.Error -> funInterstitialCallback?.onAdFailed(campaignResponse.message.toString())
-                    is Resource.Success -> {
-                        val campaign = campaignResponse.data
+                repository.loadFunAd(authorization, interstitial_ad_id) { campaignResponse ->
+                    when (campaignResponse) {
+                        is Resource.Error -> {
+                            Log.i(TAG, "loadFunInterstitialAd error->->->->: ${campaignResponse.message}")
+                            funInterstitialCallback?.onAdFailed(campaignResponse.message.toString())
+                        }
 
-                        withContext(Dispatchers.Main) {
-                            if (campaign != null) {
-                                funInterstitialCallback?.onAdLoaded(campaign)
-                            } else {
-                                funInterstitialCallback?.onAdFailed("Unexpected Error")
+                        is Resource.Success -> {
+                            Log.i(TAG, "loadFunInterstitialAd success->->->->: ${campaignResponse.message}")
+                            val campaign = campaignResponse.data
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                if (campaign != null) {
+                                    funInterstitialCallback?.onAdLoaded(campaign)
+                                } else {
+                                    funInterstitialCallback?.onAdFailed("Unexpected Error")
+                                }
                             }
                         }
                     }
@@ -284,17 +293,24 @@ class FunMobAds {
         CoroutineScope(IO).launch {
             this@FunMobAds.authorization = authorization
             if (banner_ad_id.contains("banner")) {
-                when (val campaignResponse = repository.loadFunAd(authorization, banner_ad_id)) {
-                    is Resource.Error -> funBannerCallback.onAdFailed(campaignResponse.message.toString())
-                    is Resource.Success -> {
-                        val campaign = campaignResponse.data
+                repository.loadFunAd(authorization, banner_ad_id) { campaignResponse ->
+                    when (campaignResponse) {
+                        is Resource.Error -> {
+                            Log.i(TAG, "loadFunBannerAd error->->->-> ${campaignResponse.message}")
+                            funBannerCallback.onAdFailed(campaignResponse.message.toString())
+                        }
 
-                        withContext(Dispatchers.Main) {
-                            if (campaign != null) {
-                                funBannerCallback.onAdLoaded()
-                                showBannerAd(activity, campaign, parentView, funBannerCallback)
-                            } else {
-                                funBannerCallback.onAdFailed("Unexpected Error")
+                        is Resource.Success -> {
+                            Log.i(TAG, "loadFunBannerAd success->->->->: ${campaignResponse.message}")
+                            val campaign = campaignResponse.data
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                if (campaign != null) {
+                                    funBannerCallback.onAdLoaded()
+                                    showBannerAd(activity, campaign, parentView, funBannerCallback)
+                                } else {
+                                    funBannerCallback.onAdFailed("Unexpected Error")
+                                }
                             }
                         }
                     }
@@ -406,18 +422,26 @@ class FunMobAds {
     private fun goToPlayStore(activity: Activity, campaignResponse: CampaignResponse) {
         CoroutineScope(IO).launch { validateClick(authorization, campaignResponse.ad_unit_id, campaignResponse.combination_id) }
 
-        var domain = campaignResponse.domain
-        if (!domain.endsWith("/"))
-            domain += "/"
+        val playStoreUrl = StringBuilder().append("https://play.google.com/store/apps/details?id=")
+            .append(campaignResponse.package_name)
+            .append("&")
+            .append("referrer=utm_source")
+            .append("%3D")
+            .append("referral")
+            .append("%26")
+            .append("utm_medium")
+            .append("%3D")
+            .append("ad_click")
+            .append("%26")
+            .append("utm_campaign")
+            .append("%3D")
+            .append("friend_referral")
+            .append("%26")
+            .append("referral_code")
+            .append("%3D")
+            .append("ABC123").toString()
 
-        val link = "${campaignResponse.deeplink}?ad_unit_id=${campaignResponse.ad_unit_id}&combination_id=${campaignResponse.combination_id}"
-
-        val encodedUrl = URLEncoder.encode(link, "UTF-8")
-
-        val finalLink = "${campaignResponse.domain}?link=$encodedUrl&apn=${campaignResponse.package_name}".replace("?link=+", "?link=")
-
-        sendLog("goToPlayStore: a$finalLink")
-        openFinalLink(activity, finalLink)
+        openFinalLink(activity, playStoreUrl)
     }
 
     private fun openFinalLink(activity: Activity, path: String) {
@@ -431,7 +455,46 @@ class FunMobAds {
     }
 
     fun setupAppForInstall(authorization: String, activity: Activity, intent: Intent) {
-        MMKV.initialize(activity)
+        val referrerClient = InstallReferrerClient.newBuilder(activity).build()
+        referrerClient.startConnection(object : InstallReferrerStateListener {
+            override fun onInstallReferrerSetupFinished(responseCode: Int) {
+                when (responseCode) {
+                    InstallReferrerClient.InstallReferrerResponse.OK -> {
+                        // The connection was successful.
+                        // Get the referrer URL using the getInstallReferrer() method.
+                        val response = referrerClient.installReferrer
+                        val referrerUrl = response.installReferrer
+
+                        Log.i("TAG", "onInstallReferrerSetupFinished: ${response.installBeginTimestampSeconds}")
+                        Log.i("TAG", "onInstallReferrerSetupFinished: ${response.installVersion}")
+                        Log.i("TAG", "onInstallReferrerSetupFinished: ${response.googlePlayInstantParam}")
+                        Log.i("TAG", "onInstallReferrerSetupFinished: ${response.referrerClickTimestampSeconds}")
+                        Log.i("TAG", "onInstallReferrerSetupFinished: ${response.referrerClickTimestampServerSeconds}")
+                        Log.i("TAG", "onInstallReferrerSetupFinished: $referrerUrl")
+
+                        val source = referrerUrl.substringBefore("&").substringAfter("=")
+                        val medium = referrerUrl.substringAfter("&").substringAfter("=")
+
+                        if (source == "referral" && medium == "ad_click") {
+//                            validateInstall(authorization, adUnitId, combinationId)
+                        }
+                    }
+
+                    InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {}
+                    InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE -> {}
+                    else -> {}
+                }
+                // Disconnect from the InstallReferrer service.
+                referrerClient.endConnection()
+            }
+
+            override fun onInstallReferrerServiceDisconnected() {
+                // Retry connecting to the InstallReferrer service.
+            }
+        })
+
+
+        /*MMKV.initialize(activity)
         mmkv = MMKV.defaultMMKV()
         sharedPreferences = activity.getSharedPreferences(Constants.FunMobPrefKey, Context.MODE_PRIVATE)
 
@@ -467,7 +530,7 @@ class FunMobAds {
                 }
                 setDynamicFirstTime(false)
             }
-            .addOnFailureListener(activity) { e -> sendLog("getDynamicLink:onFailure", e) }
+            .addOnFailureListener(activity) { e -> sendLog("getDynamicLink:onFailure", e) }*/
     }
 
     private fun setDynamicFirstTime(value: Boolean) {

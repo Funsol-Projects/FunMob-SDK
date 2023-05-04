@@ -4,12 +4,9 @@
     package="com.scorpio.funmob_sdk">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--<queries>
-        <package android:name="com.freescanner.qrcodereader.barcodescanner.barcodereader.socialmobileapps" />
-    </queries>-->
+
     <application
         android:name=".MApplication"
-        android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"

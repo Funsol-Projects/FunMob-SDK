@@ -6,8 +6,8 @@ import com.funsol.funmob_sdk.utils.Resource
 
 interface FunMobRepository {
     suspend fun loadFunAd(
-        authorization: String, uuid: String
-    ): Resource<CampaignResponse>
+        authorization: String, uuid: String, responseCallback: (Resource<CampaignResponse>) -> Unit
+    )
 
     suspend fun validateClick(
         authorization: String, uuid: String, camp_uuid: String
