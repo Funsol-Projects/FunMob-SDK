@@ -18,7 +18,7 @@ import com.scorpio.funmob_sdk.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private val funMobAds: FunMobAds = FunMobAds()
+    private val funMobAds: FunMobAds by lazy { FunMobAds() }
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
