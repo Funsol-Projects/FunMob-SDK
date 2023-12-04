@@ -40,6 +40,24 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_load_interstitial" />
+            <Button
+                android:id="@+id/btn_load_app_open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Load App Open"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_show_interstitial" />
+            <Button
+                android:id="@+id/btn_show_app_open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show App Open"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_load_app_open" />
 
             <Button
                 android:id="@+id/btn_load_native_1"

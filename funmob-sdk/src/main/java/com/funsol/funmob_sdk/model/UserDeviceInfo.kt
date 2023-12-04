@@ -1,5 +1,8 @@
 package com.funsol.funmob_sdk.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class UserDeviceInfo(
     var time: String = "",
     var uuid: String = "",

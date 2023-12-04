@@ -4,9 +4,11 @@
     <uses-permission android:name="android.permission.INSTALL_REFERRER" />
 
     <application android:supportsRtl="true">
-
         <activity
-            android:name="com.funsol.funmob_sdk.ui.InterstitialActivity"
+            android:name=".ui.AppOpenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.InterstitialActivity"
             android:exported="false"
             android:label="@string/title_activity_interstitial"
             android:theme="@style/Theme.FunMobSDK">

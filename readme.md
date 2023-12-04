@@ -30,7 +30,7 @@ Add Funsol Billing Helper dependencies in App level build.gradle.
 
 ```kotlin
     dependencies {
-        implementation 'com.github.Funsol-Projects:FunMob-SDK:0.1.5-Beta'
+        implementation 'com.github.Funsol-Projects:FunMob-SDK:0.1.6-Beta'
     }
 ```  
 
@@ -140,6 +140,55 @@ After Initializing callbacks, use these functions to load and show InterstitialA
     funMobAds.loadFunInterstitialAd("AUTHORIZATION_TOKEN", "YOUR_FUN_INTERSTITIAL_AD_ID")
 
     funMobAds.showInterstitialAd(this@MainActivity, campaignResponse)
+```
+### Fun AppOpen Ads
+
+To use FunAppOpenAds for your own customize implementation, First  create callback objects.
+```kotlin
+   funMobAds.funAppOpenCallback = object : FunAppOpenCallback {
+    override fun onAdLoaded(campaignResponse: CampaignResponse) {
+        Log.i(TAG, "AppOpenCallback -> onAdLoaded:")
+    }
+
+    override fun onAdFailed(adError: String) {
+        Log.i(TAG, "AppOpenCallback -> onAdFailed: $adError")
+    }
+
+    override fun onAdDismissed() {
+        Log.i(TAG, "AppOpenCallback -> onAdDismissed:")
+    }
+
+    override fun onAdShown() {
+        Log.i(TAG, "AppOpenCallback -> onAdShown:")
+    }
+
+    override fun onAdClicked() {
+        Log.i(TAG, "AppOpenCallback -> onAdClicked:")
+    }
+
+  }
+```
+
+After Initializing callbacks, use these functions to load and show AppOpenAd.
+
+```kotlin
+   funMobAds.loadFunAppOpenAd("AUTHORIZATION_TOKEN","YOUR_FUN_APP_OPEN_AD_ID")
+
+   funMobAds.showAppOpenAd(this@MainActivity, campaignResponse)
+```
+
+There is also FunAppOpenManager available, to use FunAppOpenManager initialize it in your application.
+
+```kotlin
+   FunAppOpenManager(this,funMobAds,"AUTHORIZATION_TOKEN","YOUR_FUN_APP_OPEN_AD_ID")
+```
+
+You can handle premium user and fun app open ad by using  adshow,isPremium
+
+```kotlin
+   FunAppOpenManager.adShow = true
+
+   FunAppOpenManager.isPremium = false
 ```
 
 ## License

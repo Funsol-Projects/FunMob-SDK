@@ -79,6 +79,9 @@ class DefaultFunMobRepository : FunMobRepository {
                     if (response.isSuccessful && result != null) {
                         responseCallback(Resource.Success(result))
                     }
+                    else{
+                        responseCallback(Resource.Error("${response.code()} -> ${response.errorBody()?.string()}"))
+                    }
                 }
 
                 override fun onFailure(call: Call<CampaignResponse>, t: Throwable) {
@@ -114,9 +117,7 @@ class DefaultFunMobRepository : FunMobRepository {
             userDeviceInfo.time = getTimeZone()
             userDeviceInfo.uuid = uuid
             userDeviceInfo.camp_uuid = camp_uuid
-
             val requestBody = RequestBody.create(mediaType, Gson().toJson(userDeviceInfo).trimIndent())
-
             val response = api.validateImpression(authorization, requestBody)
             Log.i("MyTesting", "validateImpression: $response")
         } catch (ex: Exception) {

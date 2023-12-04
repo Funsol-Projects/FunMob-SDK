@@ -1,8 +1,9 @@
 package com.funsol.funmob_sdk.model
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.android.parcel.Parcelize
-
+@Keep
 @Parcelize
 data class CampaignResponse(
     val ad_unit_id: String,

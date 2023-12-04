@@ -5,7 +5,9 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,7 +19,9 @@ import android.widget.TextView
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.bumptech.glide.Glide
+import com.funsol.funmob_sdk.databinding.ActivityAppOpenBinding
 import com.funsol.funmob_sdk.databinding.ActivityInterstitialBinding
+import com.funsol.funmob_sdk.interfaces.FunAppOpenCallback
 import com.funsol.funmob_sdk.interfaces.FunBannerCallback
 import com.funsol.funmob_sdk.interfaces.FunInterstitialCallback
 import com.funsol.funmob_sdk.interfaces.FunNativeCallback
@@ -33,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.security.AccessController.getContext
 
 
 class FunMobAds {
@@ -43,6 +48,7 @@ class FunMobAds {
 
     var funNativeCallback: FunNativeCallback? = null
     var funInterstitialCallback: FunInterstitialCallback? = null
+    var funAppOpenCallback: FunAppOpenCallback? = null
 
     private var authorization: String = ""
 
@@ -60,7 +66,6 @@ class FunMobAds {
                         is Resource.Success -> {
                             Log.i(TAG, "loadFunNativeAd success->->->->: ${campaignResponse.message}")
                             val campaign = campaignResponse.data
-
                             CoroutineScope(Dispatchers.Main).launch {
                                 if (campaign != null) {
                                     funNativeCallback?.onAdLoaded(campaign)
@@ -85,19 +90,21 @@ class FunMobAds {
             "1a" -> {
                 inflater.inflate(R.layout.funmob_native_1a, parentView, false)
             }
-
             "1b" -> {
                 inflater.inflate(R.layout.funmob_native_1b, parentView, false)
             }
-
             "7a" -> {
                 inflater.inflate(R.layout.funmob_native_7a, parentView, false)
             }
-
             "7b" -> {
                 inflater.inflate(R.layout.funmob_native_7b, parentView, false)
             }
-
+            "6a"->{
+                inflater.inflate(R.layout.funmob_native_6a, parentView, false)
+            }
+            "6b"->{
+                inflater.inflate(R.layout.funmob_native_6b, parentView, false)
+            }
             else -> {
                 inflater.inflate(R.layout.funmob_native_1a, parentView, false)
             }
@@ -196,11 +203,9 @@ class FunMobAds {
                             Log.i(TAG, "loadFunInterstitialAd error->->->->: ${campaignResponse.message}")
                             funInterstitialCallback?.onAdFailed(campaignResponse.message.toString())
                         }
-
                         is Resource.Success -> {
                             Log.i(TAG, "loadFunInterstitialAd success->->->->: ${campaignResponse.message}")
                             val campaign = campaignResponse.data
-
                             CoroutineScope(Dispatchers.Main).launch {
                                 if (campaign != null) {
                                     funInterstitialCallback?.onAdLoaded(campaign)
@@ -392,7 +397,133 @@ class FunMobAds {
         funBannerCallback.onAdShown()
         CoroutineScope(IO).launch { validateImpression(authorization, campaignResponse.ad_unit_id, campaignResponse.combination_id) }
     }
+    fun loadFunAppOpenAd(authorization: String, app_open_ad_id: String) {
+        CoroutineScope(IO).launch {
+            this@FunMobAds.authorization = authorization
+            if (app_open_ad_id.contains("app-open")) {
+                repository.loadFunAd(authorization, app_open_ad_id) { campaignResponse ->
+                    when (campaignResponse) {
+                        is Resource.Error -> {
+                            Log.i(TAG, "loadFunAppOpenAd error->->->->: ${campaignResponse.message}")
+                            funAppOpenCallback?.onAdFailed(campaignResponse.message.toString())
+                        }
+                        is Resource.Success -> {
+                            Log.i(TAG, "loadFunAppOpenAd success->->->->: ${campaignResponse.message}")
+                            val campaign = campaignResponse.data
+                            CoroutineScope(Dispatchers.Main).launch {
+                                if (campaign != null) {
+                                    funAppOpenCallback?.onAdLoaded(campaign)
+                                } else {
+                                    funAppOpenCallback?.onAdFailed("Unexpected Error")
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    funAppOpenCallback?.onAdFailed("Invalid Advertisement Id…")
+                }
+            }
+        }
+    }
+    fun showAppOpenAd(activity: Activity, campaignResponse: CampaignResponse){
+        if (!activity.isFinishing && !activity.isDestroyed) {
+            val appOpenDialog = Dialog(activity, R.style.full_screen_dialog)
+            val appOpenDialogBinding = ActivityAppOpenBinding.inflate(activity.layoutInflater)
 
+            appOpenDialog.setContentView(appOpenDialogBinding.root)
+            appOpenDialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+            appOpenDialog.setOnDismissListener {
+                funAppOpenCallback?.onAdDismissed()
+            }
+
+            with(appOpenDialogBinding) {
+                try {
+                    val packageManager = activity.applicationContext.packageManager
+                    val appInfo = packageManager.getApplicationInfo(activity.applicationContext.packageName, 0);
+                    val icon: Drawable = packageManager.getApplicationIcon(activity.applicationContext.packageName)
+                    appName.let {
+                        if(appInfo != null){
+                            it.text =packageManager.getApplicationLabel(appInfo)
+                        }
+                        else{
+                            it.text = "Unknown"
+                        }
+                    }
+                    Glide.with(activity.applicationContext)
+                        .load(icon).into(parentAppIcon)
+                }
+                catch (e: PackageManager.NameNotFoundException) {
+                    e.printStackTrace()
+                }
+                fun onClick(view: View) {
+                    view.setOnClickListener {
+                        funAppOpenCallback?.onAdClicked()
+                        goToPlayStore(activity, campaignResponse)
+//                        appOpenDialog.dismiss()
+                    }
+                }
+                title.let {
+                    it.text = campaignResponse.title
+                    onClick(it)
+                }
+                adBody.let {
+                    it.text = campaignResponse.description
+                    onClick(it)
+                }
+
+             /*
+                totalDownloads.let {
+                    it.text = NumberConverter().format(campaignResponse.downloads)
+                    onClick(it)
+                }
+
+                onClick(downloadsHeading)
+
+                totalRating.let {
+                    it.text = StringBuilder().append(campaignResponse.ratings)
+                    onClick(it)
+                }
+
+                onClick(ratingHeading)
+
+                onClick(appPrice)
+                onClick(priceHeading)
+                onClick(playIcon)
+                onClick(textPlayStore)*/
+
+                adMedia.let {
+                    Glide.with(activity.applicationContext)
+                        .load(campaignResponse.image).into(it)
+                    onClick(it)
+                }
+                Glide.with(activity.applicationContext)
+                    .load(campaignResponse.icon).into(appIcon)
+
+
+               /* appIcon.setOnClickListener {
+                    funInterstitialCallback?.onAdClicked()
+                    goToPlayStore(activity, campaignResponse)
+                    interstitialDialog.dismiss()
+                }
+
+                btnInstall.setOnClickListener {
+                    funInterstitialCallback?.onAdClicked()
+                    goToPlayStore(activity, campaignResponse)
+                    interstitialDialog.dismiss()
+                }*/
+
+                continueToAppCard.setOnClickListener {
+                    appOpenDialog.dismiss()
+                }
+            }
+
+            funAppOpenCallback?.onAdShown()
+            CoroutineScope(IO).launch { validateImpression(authorization, campaignResponse.ad_unit_id, campaignResponse.combination_id) }
+            appOpenDialog.show()
+        }
+    }
     private suspend fun validateClick(authorization: String, uuid: String, camp_uuid: String) {
         repository.validateClick(authorization, uuid, camp_uuid)
     }
