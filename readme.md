@@ -143,7 +143,7 @@ After Initializing callbacks, use these functions to load and show InterstitialA
 ```
 ### Fun AppOpen Ads
 
-To use FunAppOpenAds for your own customize implementation, First  create callback objects.
+To use FunAppOpenAds for your own customize implementation, First create callback objects.
 ```kotlin
    funMobAds.funAppOpenCallback = object : FunAppOpenCallback {
     override fun onAdLoaded(campaignResponse: CampaignResponse) {
@@ -177,13 +177,13 @@ After Initializing callbacks, use these functions to load and show AppOpenAd.
    funMobAds.showAppOpenAd(this@MainActivity, campaignResponse)
 ```
 
-There is also FunAppOpenManager available, to use FunAppOpenManager initialize it in your application.
+There is also FunAppOpenManager available, to use FunAppOpenManager initialize it in your application & This class will handle everything for you.
 
 ```kotlin
    FunAppOpenManager(this,funMobAds,"AUTHORIZATION_TOKEN","YOUR_FUN_APP_OPEN_AD_ID")
 ```
 
-You can handle premium user and fun app open ad by using  adshow,isPremium
+You can handle premium user and fun app open ad by using ```FunAppOpenManager.adShow```, ```FunAppOpenManager.isPremium```
 
 ```kotlin
    FunAppOpenManager.adShow = true

@@ -9,6 +9,5 @@ class MApplication : Application(){
     override fun onCreate() {
         super.onCreate()
         FunAppOpenManager(this,funMobAds,Constants.authorization,Constants.appOpenAdId)
-
     }
 }
