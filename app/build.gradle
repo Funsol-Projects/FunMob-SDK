@@ -67,6 +67,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
 
     implementation 'com.google.firebase:firebase-dynamic-links-ktx:21.1.0'
+//    implementation 'com.github.Funsol-Projects:FunMob-SDK:0.2.0-Beta'
 
 //    implementation 'com.intuit.sdp:sdp-android:1.1.0'
 
